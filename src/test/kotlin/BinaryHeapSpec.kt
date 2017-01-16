@@ -12,20 +12,15 @@ import org.jetbrains.spek.api.dsl.on
 
 class BinaryHeapSpec : Spek({
     describe("Binary Heap") {
-        val heap = MinHeap()
+        val heap = MinHeap<Int>()
         on("Instantiate") {
-            it("") {
-                heap.push(1)
-                heap.push(2)
-                heap.push(3)
-                heap.push(4)
-                heap.push(5)
-                heap.push(6)
-                heap.push(7)
+            it("works") {
+                val items = arrayOf(1, 2, 3, 4, 5, 6, 7, 9, 9, 23, 2, 11, 14, 8, 100, 0)
+                items.forEach { heap.push(it) }
                 heap.pop()
-                heap.push(4)
-                assertThat(heap.address[4], equalTo(7))
-                assertThat(heap.address[7], equalTo(4))
+                assertThat(heap.address[1], equalTo(1))
+                heap.pop()
+                assertThat(heap.address[1], equalTo(2))
             }
         }
     }

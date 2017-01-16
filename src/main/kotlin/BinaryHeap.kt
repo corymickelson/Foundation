@@ -6,30 +6,26 @@ enum class HeapResize {
     INCREASE, DECREASE
 }
 
-class MinHeap(
-        var address: Array<Int> = Array(100, { i -> -1 }),
-        var position: Int = 1) {
+class MinHeap<T>(
+        var address: MutableList<T?> = mutableListOf(null),
+        var position: Int = 1) where T: Comparable<T> {
 
     fun left(x: Int): Int = 2 * x
     fun right(x: Int): Int = 2 * x + 1
     fun parent(x: Int): Int = x / 2
 
-    fun push(item: Int) {
-        if (position >= address.size * 0.75) resizeAddressSpace()
-        if (position == 0) address[position] = item
+    fun push(item: T) {
+        if (position == 0) address.add(position, item)
         else {
-            address[position] = item
+            address.add(position, item)
             bubbleUp(position)
         }
         position++
     }
 
-    private fun resizeAddressSpace() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     tailrec private fun bubbleUp(itemId: Int) {
-        if (address[itemId] < address[parent(itemId)]) {
+        if(parent(itemId) <= 0) return
+        if (address[itemId]!! < address[parent(itemId)]!!) {
             val child = address[itemId]
             val parent = address[parent(itemId)]
             address[itemId] = parent
@@ -38,19 +34,19 @@ class MinHeap(
         }
     }
 
-    fun pop(): Int {
+    fun pop(): T {
         val item = address[1]
         address[1] = address[position - 1]
-        address[position - 1] = -1
+        //address[position - 1] = null
         position--
         trickleDown()
-        return item
+        return item!!
     }
 
     tailrec private fun trickleDown(id: Int = 1) {
         var smallest = id
-        if(left(id) < position && address[smallest] > address[left(id)]) smallest = left(id)
-        if(right(id) < position && address[smallest] > address[right(id)]) smallest = right(id)
+        if(left(id) < position && address[smallest]!! > address[left(id)]!!) smallest = left(id)
+        if(right(id) < position && address[smallest]!! > address[right(id)]!!) smallest = right(id)
         if(smallest != id) {
             swap(id, smallest)
             trickleDown(smallest)
