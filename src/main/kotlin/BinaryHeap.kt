@@ -8,7 +8,7 @@ enum class HeapResize {
 
 class MinHeap(
         var address: Array<Int> = Array(100, { i -> -1 }),
-        var position: Int = 0) {
+        var position: Int = 1) {
 
     fun left(x: Int): Int = 2 * x
     fun right(x: Int): Int = 2 * x + 1
@@ -16,7 +16,7 @@ class MinHeap(
 
     fun push(item: Int) {
         if (position >= address.size * 0.75) resizeAddressSpace()
-        if (position == 0) address[position++] = item
+        if (position == 0) address[position] = item
         else {
             address[position] = item
             bubbleUp(position)
@@ -40,33 +40,28 @@ class MinHeap(
 
     fun pop(): Int {
         val item = address[1]
-        address[1] = address[position]
+        address[1] = address[position - 1]
+        address[position - 1] = -1
         position--
         trickleDown()
         return item
     }
 
-    tailrec private fun trickleDown(itemId: Int = 1) {
-        val leftChildValue = address[left(itemId)]
-        val rightChildValue = address[right(itemId)]
-        val itemValue = address[itemId]
-        var recallAtIndex: Int? = null
-        if (leftChildValue == -1 || rightChildValue == -1) throw Exception("Index out of heap scope.")
-        if (itemValue < leftChildValue && itemValue < rightChildValue) return
-        if (itemValue > leftChildValue && itemValue > rightChildValue ||
-                itemValue > leftChildValue) {
-            address[left(itemId)] = itemValue
-            address[itemId] = leftChildValue
-            recallAtIndex = left(itemId)
+    tailrec private fun trickleDown(id: Int = 1) {
+        var smallest = id
+        if(left(id) < position && address[smallest] > address[left(id)]) smallest = left(id)
+        if(right(id) < position && address[smallest] > address[right(id)]) smallest = right(id)
+        if(smallest != id) {
+            swap(id, smallest)
+            trickleDown(smallest)
         }
-        if (itemValue > rightChildValue) {
-            address[right(itemId)] = itemValue
-            address[itemId] = rightChildValue
-            recallAtIndex = right(itemId)
-        }
-        trickleDown(recallAtIndex!!)
     }
 
+    private fun swap(x:Int, y:Int) {
+        val temp = address[x]
+        address[x] = address[y]
+        address[y] = temp
+    }
 
     fun find(item: Int): HeapItemInfo {
         return HeapItemInfo(0, 0)
@@ -74,5 +69,4 @@ class MinHeap(
 }
 
 data class HeapItemInfo(val index: Int, val item: Int)
-
 
