@@ -14,17 +14,17 @@ class ShellSort<T>(var subject: Array<T>) where T : Comparable<T> {
         if (interval > gap) {
             gap--
             interval = 1
-            if (gap == 1) InsertSort()
+            if (gap == 1) insertSort()
             if (gap == 0) return
         }
         shellsort()
     }
 
-    private fun InsertSort() {
-        subject.forEachIndexed { idx, i -> InsertSort(idx) }
+    private fun insertSort() {
+        subject.forEachIndexed { idx, i -> insertSort(idx) }
     }
 
-    tailrec private fun InsertSort(idx: Int) {
+    tailrec private fun insertSort(idx: Int) {
         if (idx - 1 < 0) return
         val s = subject[idx]
         val l = subject[idx - 1]
@@ -32,7 +32,7 @@ class ShellSort<T>(var subject: Array<T>) where T : Comparable<T> {
         if (s < l) swap((idx - 1), idx)
         else return
 
-        InsertSort(idx - 1)
+        insertSort(idx - 1)
     }
 
     tailrec private fun sort(idx: Int) {
