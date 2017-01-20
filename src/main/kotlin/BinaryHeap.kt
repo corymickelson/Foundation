@@ -8,7 +8,7 @@ enum class HeapResize {
 
 class MinHeap<T>(
         var address: MutableList<T?> = mutableListOf(null),
-        var position: Int = 1) where T: Comparable<T> {
+        var position: Int = 1) where T : Comparable<T> {
 
     fun left(x: Int): Int = 2 * x
     fun right(x: Int): Int = 2 * x + 1
@@ -24,7 +24,7 @@ class MinHeap<T>(
     }
 
     tailrec private fun bubbleUp(itemId: Int) {
-        if(parent(itemId) <= 0) return
+        if (parent(itemId) <= 0) return
         if (address[itemId]!! < address[parent(itemId)]!!) {
             val child = address[itemId]
             val parent = address[parent(itemId)]
@@ -37,7 +37,6 @@ class MinHeap<T>(
     fun pop(): T {
         val item = address[1]
         address[1] = address[position - 1]
-        //address[position - 1] = null
         position--
         trickleDown()
         return item!!
@@ -45,22 +44,18 @@ class MinHeap<T>(
 
     tailrec private fun trickleDown(id: Int = 1) {
         var smallest = id
-        if(left(id) < position && address[smallest]!! > address[left(id)]!!) smallest = left(id)
-        if(right(id) < position && address[smallest]!! > address[right(id)]!!) smallest = right(id)
-        if(smallest != id) {
+        if (left(id) < position && address[smallest]!! > address[left(id)]!!) smallest = left(id)
+        if (right(id) < position && address[smallest]!! > address[right(id)]!!) smallest = right(id)
+        if (smallest != id) {
             swap(id, smallest)
             trickleDown(smallest)
         }
     }
 
-    private fun swap(x:Int, y:Int) {
+    private fun swap(x: Int, y: Int) {
         val temp = address[x]
         address[x] = address[y]
         address[y] = temp
-    }
-
-    fun find(item: Int): HeapItemInfo {
-        return HeapItemInfo(0, 0)
     }
 }
 
